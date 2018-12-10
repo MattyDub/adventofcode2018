@@ -27,15 +27,12 @@ def calc_overlap(claim1, claim2):
 def get_claim_overlaps(claims):
     """ Take a list of all claims, and convert them into a set of x,y coordinates
     that constitute the "overlaps"."""
-    total_overlap = set()
     overlaps = []
-    for x, (claim1, claim2) in enumerate(itertools.product(claims, claims)):
+    for claim1, claim2 in itertools.product(claims, claims):
         if claim1.id != claim2.id:
             overlap = calc_overlap(claim1, claim2)
             if overlap:
                 overlaps.extend(overlap)
-    # print "Before set-ifying, there are {} overlaps".format(len(overlaps))
-    # print "overlaps[0] = {}".format(overlaps[0])
     return set(itertools.chain(overlaps))
 
 def main(filename):
