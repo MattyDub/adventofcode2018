@@ -27,20 +27,21 @@ def calc_overlap(claim1, claim2):
 def get_claim_overlaps(claims):
     """ Take a list of all claims, and convert them into a set of x,y coordinates
     that constitute the "overlaps"."""
+    non_overlapping_id = 0
     overlaps = []
     for claim1, claim2 in itertools.product(claims, claims):
         if claim1.id != claim2.id:
             overlap = calc_overlap(claim1, claim2)
             if overlap:
                 overlaps.extend(overlap)
-    return set(itertools.chain(overlaps))
+    return set(itertools.chain(overlaps)), non_overlapping_id
 
 def main(filename):
     claims = []
     with open(filename) as f:
         for line in f:
             claims.append(parse_claim(line.strip()))
-        claim_overlaps = get_claim_overlaps(claims)
+        claim_overlaps, non_overlapping_id = get_claim_overlaps(claims)
         print "There are {} square inches in the overlaps".format(len(claim_overlaps))
     
 if __name__ == '__main__':
