@@ -29,11 +29,17 @@ def get_claim_overlaps(claims):
     that constitute the "overlaps"."""
     non_overlapping_id = 0
     overlaps = []
-    for claim1, claim2 in itertools.product(claims, claims):
-        if claim1.id != claim2.id:
-            overlap = calc_overlap(claim1, claim2)
-            if overlap:
-                overlaps.extend(overlap)
+
+    for i, claim1 in enumerate(claims):
+        overlapped = False
+        for j, claim2 in enumerate(claims):
+            if claim1.id != claim2.id:
+                overlap = calc_overlap(claim1, claim2)
+                if overlap:
+                    overlapped = True
+                    overlaps.extend(overlap)
+        if not overlapped:
+            non_overlapping_id = claims[i].id
     return set(itertools.chain(overlaps)), non_overlapping_id
 
 def main(filename):
@@ -42,7 +48,7 @@ def main(filename):
         for line in f:
             claims.append(parse_claim(line.strip()))
         claim_overlaps, non_overlapping_id = get_claim_overlaps(claims)
-        print "There are {} square inches in the overlaps".format(len(claim_overlaps))
+        print "There are {} square inches in the overlaps; claim {} had no overlaps".format(len(claim_overlaps), non_overlapping_id)
     
 if __name__ == '__main__':
     main(sys.argv[1])
